@@ -415,7 +415,8 @@ section{ padding: 84px 0; }
 /* ==========================================================================
    Reveal-on-scroll
    ========================================================================== */
-.reveal{ opacity:0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+.reveal{ opacity:1; transform:none; transition: opacity .5s ease, transform .5s ease; }
+.js .reveal:not(.is-visible){ opacity:0; transform: translateY(14px); }
 .reveal.is-visible{ opacity:1; transform:none; }
 
 /* ==========================================================================

@@ -1,7 +1,17 @@
 (function () {
   "use strict";
 
+  function makeRevealsVisible() {
+    try {
+      document.querySelectorAll(".reveal").forEach(function (el) {
+        el.classList.add("is-visible");
+      });
+    } catch (e) {}
+  }
+
   try {
+    document.documentElement.classList.add("js");
+
     /* ---------- theme toggle ("calque clair / sombre") ---------- */
     var root = document.body;
     var toggle = document.getElementById("themeToggle");
@@ -17,9 +27,10 @@
 
     function initTheme() {
       var stored = null;
-      try { stored = (typeof localStorage !== "undefined") ? localStorage.getItem(STORAGE_KEY) : null; } catch (e) { stored = null; }
+      try { stored = window.localStorage.getItem(STORAGE_KEY); } catch (e) { stored = null; }
       if (stored === "light" || stored === "dark") { applyTheme(stored); return; }
-      var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var prefersDark = false;
+      try { prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch (e) {}
       applyTheme(prefersDark ? "dark" : "light");
     }
 
@@ -27,7 +38,7 @@
       toggle.addEventListener("click", function () {
         var next = (root && root.getAttribute("data-theme") === "dark") ? "light" : "dark";
         applyTheme(next);
-        try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+        try { window.localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
       });
     }
 
@@ -96,8 +107,7 @@
     });
 
   } catch (err) {
-    // Ensure content is visible if script fails
-    try { document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("is-visible"); }); } catch (e) {}
+    makeRevealsVisible();
     console.error(err);
   }
 })();
