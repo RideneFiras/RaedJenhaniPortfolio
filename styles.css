@@ -359,6 +359,7 @@ section{ padding: 84px 0; }
   border:1px solid var(--line); border-radius: var(--radius); padding: 26px 22px 10px;
   background: var(--surface-raised); margin-bottom: 48px; overflow-x:auto;
 }
+#experience .timeline-card{ display:none; }
 .timeline-card::before{
   content:""; position:absolute; top:0; bottom:14px; left:0; width:22px;
   background: linear-gradient(to right, var(--surface-raised), transparent);
