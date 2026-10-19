@@ -1,17 +1,7 @@
 (function () {
   "use strict";
 
-  function makeRevealsVisible() {
-    try {
-      document.querySelectorAll(".reveal").forEach(function (el) {
-        el.classList.add("is-visible");
-      });
-    } catch (e) {}
-  }
-
   try {
-    document.documentElement.classList.add("js");
-
     /* ---------- theme toggle ("calque clair / sombre") ---------- */
     var root = document.body;
     var toggle = document.getElementById("themeToggle");
@@ -82,32 +72,12 @@
       sections.forEach(function (s) { spy.observe(s); });
     }
 
-    /* ---------- reveal on scroll (safe fallback) ---------- */
-    var revealEls = document.querySelectorAll(".reveal");
-    if (typeof IntersectionObserver !== "undefined" && revealEls.length) {
-      var reveal = new IntersectionObserver(
-        function (entries, obs) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              obs.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.12 }
-      );
-      revealEls.forEach(function (el) { reveal.observe(el); });
-    } else {
-      revealEls.forEach(function (el) { el.classList.add("is-visible"); });
-    }
-
     /* ---------- timeline: default-scroll to the present end on narrow screens ---------- */
     document.querySelectorAll(".timeline-card").forEach(function (card) {
       try { card.scrollLeft = card.scrollWidth; } catch (e) {}
     });
 
   } catch (err) {
-    makeRevealsVisible();
     console.error(err);
   }
 })();
