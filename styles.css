@@ -354,18 +354,51 @@ section{ padding: 84px 0; }
 /* ==========================================================================
    04 — Expérience / timeline
    ========================================================================== */
-.timeline-card{
-  position:relative;
-  border:1px solid var(--line); border-radius: var(--radius); padding: 26px 22px 10px;
-  background: var(--surface-raised); margin-bottom: 48px; overflow-x:auto;
+.career{
+  border:1px solid var(--line); border-radius: var(--radius); padding: 28px 28px 14px;
+  background: var(--surface-raised); margin-bottom: 48px;
 }
-.timeline-card::before{
-  content:""; position:absolute; top:0; bottom:14px; left:0; width:22px;
-  background: linear-gradient(to right, var(--surface-raised), transparent);
-  pointer-events:none;
+.career-stats{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); border-bottom:1px solid var(--line); padding-bottom:22px; }
+.career-stats .stat{ display:flex; flex-direction:column; gap:4px; padding: 0 20px; border-left:1px solid var(--line); }
+.career-stats .stat:first-child{ padding-left:0; border-left:none; }
+.career-stats strong{ font-family: var(--font-head); font-size: clamp(1.7rem, 3.4vw, 2.3rem); line-height:1; color: var(--blue); }
+.career-stats span{ font-family: var(--font-mono); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color: var(--text-mute); }
+
+.career-track{ margin: 26px 0 30px; }
+.career-bar{ position:relative; height:10px; border-radius:5px; background: var(--line); }
+.career-bar .seg{ position:absolute; top:0; bottom:0; min-width:6px; background: var(--c); border-radius:5px; box-shadow: 0 0 0 2px var(--surface-raised); }
+.career-bar .seg.is-current::after{
+  content:""; position:absolute; right:-5px; top:50%; width:10px; height:10px; margin-top:-5px;
+  border-radius:50%; background: var(--c); animation: career-pulse 2s ease-out infinite;
 }
-.timeline-card svg{ width:100%; height:auto; min-width:560px; display:block; }
-.tl-legend{ display:flex; gap:24px; margin-top:10px; padding-bottom:14px; flex-wrap:wrap; }
+.career-years{ position:relative; height:16px; margin-top:8px; font-family: var(--font-mono); font-size:.68rem; color: var(--text-mute); }
+.career-years span{ position:absolute; top:0; padding-left:6px; border-left:1px solid var(--line-strong); line-height:16px; }
+.career-years .now{ right:0; padding:0 6px 0 0; border-left:none; border-right:1px dashed var(--line-strong); }
+
+.career-steps{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns: repeat(6, minmax(0,1fr)); }
+.career-steps .step{ position:relative; display:flex; flex-direction:column; gap:4px; padding: 30px 14px 6px 0; }
+.career-steps .step::before{ content:""; position:absolute; top:7px; left:0; right:0; height:2px; background: var(--line); }
+.career-steps .step::after{
+  content:""; position:absolute; top:2px; left:0; width:12px; height:12px; border-radius:50%;
+  background: var(--surface-raised); border:2px solid var(--c); box-sizing:border-box;
+}
+.career-steps .step.is-current::after{ background: var(--c); animation: career-pulse 2s ease-out infinite; }
+.step-dates{ font-family: var(--font-mono); font-size:.68rem; color: var(--c); letter-spacing:.02em; }
+.step-company{ font-family: var(--font-head); font-size:1.02rem; font-weight:700; color: var(--text); }
+.step-role{ font-size:.84rem; color: var(--text-soft); line-height:1.35; }
+.step-dur{ margin-top:4px; font-family: var(--font-mono); font-size:.68rem; color: var(--text-mute); }
+.step-dur .badge{
+  font-style:normal; display:inline-block; padding:2px 8px; border-radius:999px;
+  background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); font-weight:600;
+}
+@keyframes career-pulse{
+  0%{ box-shadow: 0 0 0 0 color-mix(in srgb, var(--c) 55%, transparent); }
+  100%{ box-shadow: 0 0 0 9px color-mix(in srgb, var(--c) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce){
+  .career-bar .seg.is-current::after, .career-steps .step.is-current::after{ animation:none; }
+}
+.tl-legend{ display:flex; gap:24px; margin-top:18px; padding-top:14px; border-top:1px solid var(--line); flex-wrap:wrap; }
 .tl-legend span{ display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:.72rem; color:var(--text-soft); }
 .tl-legend i{ width:12px; height:12px; border-radius:2px; display:inline-block; }
 
@@ -446,6 +479,14 @@ main section, .site-footer{
   section{ padding:56px 0; }
   .domain-grid{ grid-template-columns: 1fr; }
   .role-card{ grid-template-columns: 1fr; gap:10px; }
+  .career{ padding: 22px 18px 12px; }
+  .career-stats .stat{ padding: 0 10px; }
+  .career-years .now{ display:none; }
+  .career-steps{ grid-template-columns: 1fr; }
+  .career-steps .step{ padding: 0 0 22px 28px; }
+  .career-steps .step::before{ top:12px; bottom:0; left:5px; right:auto; width:2px; height:auto; }
+  .career-steps .step:last-child::before{ display:none; }
+  .career-steps .step::after{ top:2px; }
   .edu-grid{ grid-template-columns:1fr; }
   .footer-top{ grid-template-columns: 1fr; }
   .footer-top .cell{ border-right:none !important; border-bottom:1px solid var(--navy-fixed-line); }
