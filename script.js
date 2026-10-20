@@ -72,9 +72,52 @@
       sections.forEach(function (s) { spy.observe(s); });
     }
 
-    /* ---------- timeline: default-scroll to the present end on narrow screens ---------- */
-    document.querySelectorAll(".timeline-card").forEach(function (card) {
-      try { card.scrollLeft = card.scrollWidth; } catch (e) {}
+    /* ---------- career line: recompute bars, durations and totals from today's date ---------- */
+    document.querySelectorAll("[data-career]").forEach(function (career) {
+      try {
+        var now = new Date();
+        var nowM = now.getFullYear() * 12 + now.getMonth() + (now.getDate() - 1) / 31;
+
+        function toM(s) { var p = s.split("-"); return (+p[0]) * 12 + (+p[1] - 1); }
+        function endM(el) { return el.getAttribute("data-end") ? toM(el.getAttribute("data-end")) : nowM; }
+        function pct(m) { return ((m - startM) / (nowM - startM) * 100).toFixed(2) + "%"; }
+        function duration(months) {
+          var m = Math.round(months), y = Math.floor(m / 12), r = m % 12, out = [];
+          if (m < 1) return "< 1 mois";
+          if (y) out.push(y + (y > 1 ? " ans" : " an"));
+          if (r) out.push(r + " mois");
+          return out.join(" ");
+        }
+
+        var startM = Infinity;
+        career.querySelectorAll(".seg").forEach(function (s) { startM = Math.min(startM, toM(s.getAttribute("data-start"))); });
+
+        career.querySelectorAll(".seg").forEach(function (s) {
+          var a = toM(s.getAttribute("data-start"));
+          s.style.left = pct(a);
+          s.style.width = ((endM(s) - a) / (nowM - startM) * 100).toFixed(2) + "%";
+        });
+
+        var years = career.querySelector(".career-years");
+        var firstYear = Math.ceil(startM / 12), lastYear = Math.floor(nowM / 12);
+        years.querySelectorAll("[data-year]").forEach(function (y) { y.parentNode.removeChild(y); });
+        for (var yr = firstYear; yr <= lastYear; yr++) {
+          if ((nowM - yr * 12) < 4) continue; // too close to "auj." to fit a label
+          var tick = document.createElement("span");
+          tick.setAttribute("data-year", yr);
+          tick.style.left = pct(yr * 12);
+          tick.textContent = yr;
+          years.insertBefore(tick, years.firstChild);
+        }
+
+        career.querySelectorAll(".step").forEach(function (step) {
+          var dur = step.querySelector(".step-dur");
+          if (dur && step.getAttribute("data-end")) dur.textContent = duration(endM(step) - toM(step.getAttribute("data-start")));
+        });
+
+        var total = career.querySelector("[data-career-years]");
+        if (total) total.textContent = Math.floor((nowM - startM) / 12) + "+";
+      } catch (e) {}
     });
 
   } catch (err) {
